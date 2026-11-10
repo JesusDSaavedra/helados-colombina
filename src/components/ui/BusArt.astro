@@ -1,0 +1,33 @@
+---
+/**
+ * Side-view school bus drawn in SVG, centered on (0, 0) and facing right.
+ * Meant to be placed inside another <svg>.
+ */
+---
+
+<g class="bus-art">
+  <ellipse cx="0" cy="22" rx="30" ry="4" fill="#1a2766" opacity="0.18"></ellipse>
+  <!-- Body -->
+  <path d="M-32 12 V-10 Q-32 -20 -22 -20 H20 Q27 -20 30 -12 L34 -2 Q36 2 36 6 V12 Q36 15 33 15 H-29 Q-32 15 -32 12Z" fill="#ffc72c"></path>
+  <!-- Roof highlight -->
+  <path d="M-26 -17 H20" stroke="#ffe08a" stroke-width="3" stroke-linecap="round"></path>
+  <!-- Windows -->
+  <g fill="#243587">
+    <rect x="-27" y="-14" width="10" height="9" rx="2"></rect>
+    <rect x="-14" y="-14" width="10" height="9" rx="2"></rect>
+    <rect x="-1" y="-14" width="10" height="9" rx="2"></rect>
+    <path d="M13 -14 H21 Q25 -14 27 -10 L29 -5 H13Z"></path>
+  </g>
+  <!-- Brand stripe -->
+  <rect x="-32" y="0" width="68" height="4" fill="#e22411"></rect>
+  <!-- Headlight and door -->
+  <circle cx="33" cy="8" r="2" fill="#fff6d6"></circle>
+  <rect x="5" y="-3" width="1.5" height="15" fill="#c99a12"></rect>
+  <!-- Wheels -->
+  <g>
+    <circle cx="-18" cy="15" r="7" fill="#1b2560"></circle>
+    <circle cx="-18" cy="15" r="3" fill="#e7e9f3"></circle>
+    <circle cx="20" cy="15" r="7" fill="#1b2560"></circle>
+    <circle cx="20" cy="15" r="3" fill="#e7e9f3"></circle>
+  </g>
+</g>

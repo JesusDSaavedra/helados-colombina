@@ -1,0 +1,82 @@
+---
+import { Icon } from 'astro-icon/components';
+import { tour } from '../../data/content';
+---
+
+<dialog id="tour-signup" class="modal modal-bottom sm:modal-middle" aria-labelledby="tour-signup-title">
+  <div class="modal-box max-w-lg rounded-t-3xl p-0 sm:rounded-3xl">
+    <header class="relative overflow-hidden bg-brand-blue px-6 pt-6 pb-8 text-white">
+      <div
+        class="absolute -top-8 -right-8 size-28 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-brand-red"
+        aria-hidden="true"
+      >
+      </div>
+      <form method="dialog">
+        <button class="btn btn-circle btn-ghost btn-sm absolute top-4 right-4 text-white" aria-label="Cerrar">
+          <Icon name="lucide:x" class="size-5" />
+        </button>
+      </form>
+      <p class="font-script text-2xl">Tour Escolar</p>
+      <h3 id="tour-signup-title" class="text-2xl font-extrabold">Inscribe tu colegio</h3>
+      <p class="mt-1 max-w-xs text-sm text-white/85">Déjanos tus datos y te contactamos para programar la visita.</p>
+    </header>
+
+    <form class="grid gap-4 px-6 py-6" data-signup-form data-endpoint={tour.signupEndpoint} novalidate>
+      <label class="form-control">
+        <span class="mb-1 text-sm font-semibold">Nombre del colegio *</span>
+        <input name="school" required class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="organization" />
+      </label>
+      <label class="form-control">
+        <span class="mb-1 text-sm font-semibold">Dirección *</span>
+        <input name="address" required class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="street-address" placeholder="Ej. Cra. 7 #100-20" />
+      </label>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="form-control">
+          <span class="mb-1 text-sm font-semibold">Nombre de contacto *</span>
+          <input name="contact" required class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="name" />
+        </label>
+        <label class="form-control">
+          <span class="mb-1 text-sm font-semibold">Cargo</span>
+          <input name="role" class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="organization-title" placeholder="Ej. Coordinador(a)" />
+        </label>
+        <label class="form-control">
+          <span class="mb-1 text-sm font-semibold">Correo *</span>
+          <input name="email" type="email" required class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="email" />
+        </label>
+        <label class="form-control">
+          <span class="mb-1 text-sm font-semibold">Teléfono *</span>
+          <input name="phone" type="tel" required class="input w-full border-brand-blue/20 bg-brand-cream" autocomplete="tel" />
+        </label>
+      </div>
+      <label class="form-control">
+        <span class="mb-1 text-sm font-semibold">Número aproximado de estudiantes</span>
+        <input name="students" type="number" min="1" class="input w-full border-brand-blue/20 bg-brand-cream" inputmode="numeric" />
+      </label>
+      <label class="flex items-start gap-3 text-sm">
+        <input name="consent" type="checkbox" required class="checkbox checkbox-primary checkbox-sm mt-0.5" />
+        <span>Autorizo el tratamiento de mis datos personales de acuerdo con la Ley 1581 de 2012. *</span>
+      </label>
+
+      <p class="min-h-5 text-sm font-medium text-brand-red" role="alert" data-signup-error></p>
+
+      <button type="submit" class="btn btn-secondary btn-block rounded-full" data-signup-submit>
+        Enviar inscripción
+        <Icon name="lucide:send" class="size-4" />
+      </button>
+    </form>
+
+    <div class="hidden flex-col items-center gap-3 px-6 py-10 text-center" data-signup-success>
+      <span class="grid size-16 place-items-center rounded-full bg-brand-blue text-white">
+        <Icon name="lucide:party-popper" class="size-8" />
+      </span>
+      <h4 class="text-xl font-extrabold">¡Gracias por inscribirte!</h4>
+      <p class="max-w-xs text-sm text-brand-blue/75">Pronto nos pondremos en contacto para llevar el Tour Escolar a tu colegio.</p>
+      <form method="dialog">
+        <button class="btn btn-primary mt-2 rounded-full px-8">Cerrar</button>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button aria-label="Cerrar">cerrar</button>
+  </form>
+</dialog>

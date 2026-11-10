@@ -1,0 +1,176 @@
+---
+import BusArt from '../ui/BusArt.astro';
+import { tour, type TourStop } from '../../data/content';
+import { smoothClosedPath } from '../../lib/route';
+
+const VIEW_W = 800;
+const VIEW_H = 560;
+
+const stopsByNumber = new Map(tour.stops.map((stop) => [stop.number, stop]));
+const routeStops = tour.routeOrder.map((n) => stopsByNumber.get(n)!);
+const routePath = smoothClosedPath([tour.depot, ...routeStops]);
+
+/** Label geometry: placed to the right of the pin unless it would overflow. */
+function labelFor(stop: TourStop) {
+  const width = Math.round(Math.max(stop.shortName.length * 7.8, stop.address.length * 6.4) + 26);
+  const placeLeft = stop.x + 22 + width > VIEW_W - 12;
+  return { width, x: placeLeft ? -22 - width : 22 };
+}
+---
+
+<svg
+  viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+  class="h-auto w-full"
+  role="img"
+  aria-labelledby="tour-map-title"
+  data-tour-map
+>
+  <title id="tour-map-title">Mapa ilustrado de la ruta del Tour Escolar Colombina por colegios de Bogotá</title>
+  <defs>
+    <clipPath id="tour-map-clip">
+      <rect width={VIEW_W} height={VIEW_H} rx="32"></rect>
+    </clipPath>
+    <pattern id="tour-streets" width="36" height="36" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+      <path d="M36 0H0V36" fill="none" stroke="#e8dcc3" stroke-width="1.4"></path>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#tour-map-clip)">
+    <!-- City base -->
+    <rect width={VIEW_W} height={VIEW_H} fill="#f6f0e3"></rect>
+    <rect width={VIEW_W} height={VIEW_H} fill="url(#tour-streets)"></rect>
+
+    <!-- Eastern hills and parks -->
+    <path d="M690 0 C660 120 720 210 680 330 C650 420 700 500 690 560 H800 V0Z" fill="#cfe2b4" opacity="0.9"></path>
+    <path d="M0 470 C80 440 120 500 90 560 H0Z" fill="#cfe2b4" opacity="0.8"></path>
+    <ellipse cx="300" cy="300" rx="46" ry="28" fill="#d9e9c1"></ellipse>
+    <ellipse cx="420" cy="200" rx="30" ry="20" fill="#d9e9c1"></ellipse>
+    <ellipse cx="230" cy="520" rx="38" ry="18" fill="#d9e9c1"></ellipse>
+
+    <!-- River -->
+    <path d="M0 250 C80 230 110 300 160 330 C210 360 240 420 230 560" fill="none" stroke="#bfdcf0" stroke-width="10" stroke-linecap="round"></path>
+
+    <!-- Main avenues -->
+    <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.95">
+      <path d="M90 -10 L250 570"></path>
+      <path d="M420 -10 C410 200 450 380 430 570"></path>
+      <path d="M-10 360 C250 330 520 300 810 250"></path>
+      <path d="M-10 150 C260 170 520 130 810 110"></path>
+    </g>
+
+    <text x="372" y="318" text-anchor="middle" class="fill-[#9b9486] text-[44px] font-extrabold" opacity="0.55">Bogotá</text>
+  </g>
+
+  <!-- Route: dashed base + animated solid progress drawn on top -->
+  <path d={routePath} fill="none" stroke="#243587" stroke-opacity="0.22" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"></path>
+  <path id="tour-route" d={routePath} fill="none" stroke="#243587" stroke-width="5" stroke-linecap="round" data-tour-route></path>
+
+  <!-- Stops -->
+  {
+    tour.stops.map((stop) => {
+      const label = labelFor(stop);
+      return (
+        <g transform={`translate(${stop.x} ${stop.y})`}>
+          <g class="tour-stop" data-tour-stop={stop.number} data-x={stop.x} data-y={stop.y}>
+            <g class="tour-stop__label">
+              <rect x={label.x} y="-50" width={label.width} height="40" rx="12" fill="#ffffff" filter="drop-shadow(0 4px 6px rgb(36 53 135 / 0.15))" />
+              <text x={label.x + 13} y="-33" class="fill-brand-blue text-[13px] font-bold">
+                {stop.shortName}
+              </text>
+              <text x={label.x + 13} y="-18" class="fill-brand-blue/70 text-[11px] font-medium">
+                {stop.address}
+              </text>
+            </g>
+            <g class="tour-stop__pin">
+              <path d="M0 0 C-5 -9 -16 -18 -16 -31 A16 16 0 1 1 16 -31 C16 -18 5 -9 0 0Z" fill="#e22411" />
+              <text x="0" y="-25" text-anchor="middle" class="fill-white text-[17px] font-extrabold">
+                {stop.number}
+              </text>
+            </g>
+          </g>
+        </g>
+      );
+    })
+  }
+
+  <!-- Compass -->
+  <g transform="translate(742 54)" aria-hidden="true">
+    <circle r="26" fill="#ffffff" stroke="#243587" stroke-width="2"></circle>
+    <path d="M0 -14 L7 10 L0 5 L-7 10Z" fill="#243587"></path>
+    <text y="-16" text-anchor="middle" class="fill-brand-blue text-[10px] font-bold">N</text>
+  </g>
+
+  <!-- Bus: outer group is moved along the route, inner groups flip and bob -->
+  <g id="tour-bus" transform={`translate(${tour.depot.x} ${tour.depot.y})`} data-tour-bus>
+    <g class="tour-bus__flip">
+      <g class="tour-bus__bob">
+        <BusArt />
+      </g>
+    </g>
+  </g>
+</svg>
+
+<style>
+  .tour-stop__pin,
+  .tour-stop__label {
+    transform-box: fill-box;
+    transition:
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.35s ease;
+  }
+
+  .tour-stop__pin {
+    transform-origin: 50% 100%;
+  }
+
+  .tour-stop__label {
+    transform-origin: 0% 50%;
+  }
+
+  /* Before the bus arrives (only when the animation is running) */
+  :global(.tour-animated) .tour-stop:not(.is-reached) .tour-stop__pin {
+    transform: scale(0.55);
+    opacity: 0.45;
+  }
+
+  :global(.tour-animated) .tour-stop:not(.is-reached) .tour-stop__label {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+
+  .tour-bus__flip {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    transition: transform 0.3s ease;
+  }
+
+  .tour-bus__flip.is-left {
+    transform: scaleX(-1);
+  }
+
+  .tour-bus__bob {
+    animation: bus-bob 0.6s ease-in-out infinite alternate;
+  }
+
+  /* Hide map labels on small screens: the stop list carries the names. */
+  @media (max-width: 639px) {
+    .tour-stop__label {
+      display: none;
+    }
+  }
+
+  @keyframes bus-bob {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-1.5px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour-bus__bob {
+      animation: none;
+    }
+  }
+</style>

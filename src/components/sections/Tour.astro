@@ -1,0 +1,287 @@
+---
+import { Icon } from 'astro-icon/components';
+import Sparkle from '../ui/Sparkle.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import TourMap from '../tour/TourMap.astro';
+import SignupModal from '../tour/SignupModal.astro';
+import { tour } from '../../data/content';
+
+const stopsInList = [...tour.stops].sort((a, b) => a.number - b.number);
+---
+
+<section id="tour" class="relative overflow-hidden bg-brand-cream pt-8 pb-24 md:pb-32" data-tour-section>
+  <div
+    class="absolute top-40 -left-24 size-72 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] bg-brand-blue/5"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-8">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="relative inline-flex flex-wrap items-end justify-center gap-x-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+        <Sparkle class="absolute -top-6 -left-8 hidden size-8 text-brand-red sm:block" />
+        <span>{tour.title}</span>
+        <span class="relative font-script text-4xl font-normal md:text-5xl">
+          {tour.titleScript}
+          <Swoosh class="absolute -bottom-3 left-0 h-3 w-full" />
+        </span>
+      </h2>
+      <p class="mt-6 text-lg text-brand-blue/80">{tour.description}</p>
+    </header>
+
+    <div class="mt-12 grid items-start gap-8 lg:grid-cols-[1.6fr_1fr]">
+      <div class="rounded-[2.5rem] bg-white p-3 shadow-2xl shadow-brand-blue/10 sm:p-4" data-reveal>
+        <TourMap />
+      </div>
+
+      <aside class="rounded-[2rem] bg-white p-5 shadow-xl shadow-brand-blue/10 sm:p-6" data-reveal style="--reveal-delay: 120ms">
+        <div class="-mt-10 mb-4 flex justify-center">
+          <span class="rounded-2xl bg-brand-blue px-5 py-2 text-center text-sm font-extrabold tracking-wide text-white uppercase shadow-lg">
+            Paradas del tour
+          </span>
+        </div>
+
+        <label class="input input-sm mb-3 flex w-full items-center gap-2 rounded-full" for="tour-search">
+          <Icon name="lucide:search" class="size-4 opacity-60" aria-hidden="true" />
+          <input
+            id="tour-search"
+            type="search"
+            placeholder="Busca tu colegio"
+            aria-label={tour.checkLabel}
+            class="grow"
+            data-tour-search
+          />
+        </label>
+
+        <ol class="divide-y divide-brand-blue/10" data-tour-list>
+          {
+            stopsInList.map((stop) => (
+              <li class="tour-item flex items-start gap-3 py-2.5" data-tour-item={stop.number} data-name={stop.name}>
+                <span class="tour-item__badge mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-brand-red text-sm font-extrabold text-white transition-transform">
+                  {stop.number}
+                </span>
+                <div class="min-w-0">
+                  <p class="text-sm leading-tight font-bold">{stop.name}</p>
+                  <p class="text-xs text-brand-blue/65">{stop.address}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="hidden rounded-2xl bg-brand-cream p-4 text-center text-sm" role="status" data-tour-empty>
+          <p class="font-semibold">Tu colegio aún no está en la ruta.</p>
+          <p class="text-brand-blue/70">¡Inscríbelo y lo sumamos al próximo recorrido!</p>
+        </div>
+
+        <div class="mt-5 grid gap-3">
+          <button type="button" class="btn btn-secondary rounded-full shadow-lg shadow-brand-red/25" data-open-signup>
+            <Icon name="lucide:school" class="size-5" />
+            {tour.signupLabel}
+          </button>
+          <button type="button" class="btn btn-outline btn-primary rounded-full border-2" data-focus-search>
+            <Icon name="lucide:search-check" class="size-5" />
+            {tour.checkLabel}
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <SignupModal />
+</section>
+
+<style>
+  .tour-item.is-reached .tour-item__badge {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 4px rgb(226 36 17 / 0.15);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const normalize = (text: string) =>
+    text
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .trim();
+
+  /** Scroll-driven bus ride: draws the route and reaches each stop in order. */
+  function setupRide(section: HTMLElement): (() => void) | undefined {
+    const route = section.querySelector<SVGPathElement>('[data-tour-route]');
+    const bus = section.querySelector<SVGGElement>('[data-tour-bus]');
+    const flip = bus?.querySelector<SVGGElement>('.tour-bus__flip');
+    if (!route || !bus || !flip) return;
+
+    const stops = [...section.querySelectorAll<SVGGElement>('[data-tour-stop]')];
+    const items = new Map(
+      [...section.querySelectorAll<HTMLElement>('[data-tour-item]')].map((el) => [el.dataset.tourItem, el]),
+    );
+
+    const reachAll = () => {
+      stops.forEach((stop) => stop.classList.add('is-reached'));
+      items.forEach((item) => item.classList.add('is-reached'));
+    };
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      reachAll();
+      return;
+    }
+
+    const length = route.getTotalLength();
+
+    // Where along the route (0–1) each stop sits: nearest sampled point.
+    const samples = Array.from({ length: 600 }, (_, i) => {
+      const point = route.getPointAtLength((length * i) / 599);
+      return { t: i / 599, x: point.x, y: point.y };
+    });
+    const stopProgress = stops.map((stop) => {
+      const x = Number(stop.dataset.x);
+      const y = Number(stop.dataset.y);
+      let best = samples[0];
+      for (const sample of samples) {
+        if ((sample.x - x) ** 2 + (sample.y - y) ** 2 < (best.x - x) ** 2 + (best.y - y) ** 2) best = sample;
+      }
+      return { el: stop, number: stop.dataset.tourStop, t: best.t };
+    });
+
+    section.classList.add('tour-animated');
+    route.style.strokeDasharray = `${length}`;
+
+    let lastX = route.getPointAtLength(0).x;
+    const render = (progress: number) => {
+      route.style.strokeDashoffset = `${length * (1 - progress)}`;
+      const point = route.getPointAtLength(length * progress);
+      bus.setAttribute('transform', `translate(${point.x} ${point.y - 14})`);
+      if (Math.abs(point.x - lastX) > 0.4) flip.classList.toggle('is-left', point.x < lastX);
+      lastX = point.x;
+
+      for (const stop of stopProgress) {
+        const reached = progress >= stop.t - 0.005;
+        stop.el.classList.toggle('is-reached', reached);
+        items.get(stop.number)?.classList.toggle('is-reached', reached);
+      }
+    };
+
+    const state = { progress: 0 };
+    render(0);
+
+    const tween = gsap.to(state, {
+      progress: 1,
+      ease: 'none',
+      onUpdate: () => render(state.progress),
+      scrollTrigger: {
+        trigger: section.querySelector('[data-tour-map]'),
+        start: 'top 80%',
+        end: 'bottom 25%',
+        scrub: 0.8,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }
+
+  /** "¿Tu colegio participa?" search over the stop list. */
+  function setupSearch(section: HTMLElement) {
+    const input = section.querySelector<HTMLInputElement>('[data-tour-search]');
+    const empty = section.querySelector<HTMLElement>('[data-tour-empty]');
+    const items = [...section.querySelectorAll<HTMLElement>('[data-tour-item]')];
+    if (!input || !empty) return;
+
+    input.addEventListener('input', () => {
+      const query = normalize(input.value);
+      let visible = 0;
+      for (const item of items) {
+        const match = !query || normalize(item.dataset.name ?? '').includes(query);
+        item.hidden = !match;
+        if (match) visible++;
+      }
+      empty.classList.toggle('hidden', visible > 0);
+    });
+
+    section.querySelector('[data-focus-search]')?.addEventListener('click', () => {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      input.focus({ preventScroll: true });
+    });
+  }
+
+  /** Sign-up dialog: validation, optional POST to the configured endpoint, success state. */
+  function setupSignup(section: HTMLElement) {
+    const dialog = section.querySelector<HTMLDialogElement>('#tour-signup');
+    const form = dialog?.querySelector<HTMLFormElement>('[data-signup-form]');
+    const error = dialog?.querySelector<HTMLElement>('[data-signup-error]');
+    const success = dialog?.querySelector<HTMLElement>('[data-signup-success]');
+    const submit = dialog?.querySelector<HTMLButtonElement>('[data-signup-submit]');
+    if (!dialog || !form || !error || !success || !submit) return;
+
+    const reset = () => {
+      form.reset();
+      form.classList.remove('hidden');
+      success.classList.add('hidden');
+      success.classList.remove('flex');
+      error.textContent = '';
+    };
+
+    section.querySelectorAll('[data-open-signup]').forEach((button) =>
+      button.addEventListener('click', () => {
+        reset();
+        dialog.showModal();
+      }),
+    );
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        const firstInvalid = form.querySelector<HTMLInputElement>(':invalid');
+        error.textContent = firstInvalid?.type === 'checkbox'
+          ? 'Debes autorizar el tratamiento de datos.'
+          : 'Revisa los campos obligatorios (*).';
+        firstInvalid?.focus();
+        return;
+      }
+
+      error.textContent = '';
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        submit.disabled = true;
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(Object.fromEntries(new FormData(form))),
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        } catch {
+          error.textContent = 'No pudimos enviar la inscripción. Inténtalo de nuevo en unos minutos.';
+          return;
+        } finally {
+          submit.disabled = false;
+        }
+      }
+
+      form.classList.add('hidden');
+      success.classList.remove('hidden');
+      success.classList.add('flex');
+    });
+  }
+
+  let cleanupRide: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    const section = document.querySelector<HTMLElement>('[data-tour-section]');
+    if (!section) return;
+    cleanupRide = setupRide(section);
+    setupSearch(section);
+    setupSignup(section);
+  });
+
+  document.addEventListener('astro:before-swap', () => cleanupRide?.());
+</script>

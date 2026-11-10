@@ -20,6 +20,7 @@
     "astro": "^7.4.8",
     "astro-icon": "^1.2.0",
     "daisyui": "^5.7.50",
+    "gsap": "^3.15.1",
     "tailwindcss": "^4.3.5"
   }
 }
