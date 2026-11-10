@@ -10,7 +10,7 @@ const { class: className = '' } = Astro.props;
 ---
 
 <a
-  href="#inicio"
+  href={asset('#inicio')}
   aria-label="Colombina, ir al inicio"
   class:list={['inline-flex items-center transition-transform duration-300 hover:-rotate-2 hover:scale-105', className]}
   transition:name="brand-logo"

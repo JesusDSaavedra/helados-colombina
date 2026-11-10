@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { tour } from '../../data/content';
+import { asset } from '../../lib/asset';
 ---
 
 <dialog id="tour-signup" class="modal modal-bottom sm:modal-middle" aria-labelledby="tour-signup-title">
@@ -54,8 +55,17 @@ import { tour } from '../../data/content';
       </label>
       <label class="flex items-start gap-3 text-sm">
         <input name="consent" type="checkbox" required class="checkbox checkbox-primary checkbox-sm mt-0.5" />
-        <span>Autorizo el tratamiento de mis datos personales de acuerdo con la Ley 1581 de 2012. *</span>
+        <span>
+          Autorizo el tratamiento de mis datos personales de acuerdo con la Ley 1581 de 2012 y la
+          <a href={asset('legal#datos-personales')} target="_blank" class="link font-semibold">política de tratamiento de datos</a>. *
+        </span>
       </label>
+      <p class="rounded-2xl bg-brand-cream p-3 text-xs text-brand-blue/75">
+        <Icon name="lucide:shield-check" class="mr-1 inline size-4 align-text-bottom text-brand-red" />
+        Durante el tour pueden tomarse fotos y videos. Su uso requiere autorización previa de padres o representantes y
+        participar no depende de aceptarla.
+        <a href={asset('legal#menores')} target="_blank" class="link font-semibold">Más información</a>.
+      </p>
 
       <p class="min-h-5 text-sm font-medium text-brand-red" role="alert" data-signup-error></p>
 

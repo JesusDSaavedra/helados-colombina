@@ -1,0 +1,81 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/sections/Footer.astro';
+import Logo from '../components/ui/Logo.astro';
+import Wave from '../components/ui/Wave.astro';
+import { legalSections } from '../data/legal';
+import { asset } from '../lib/asset';
+---
+
+<Layout
+  title="Información legal | Helados Colombina"
+  description="Políticas de tratamiento de datos, privacidad, cookies, términos de uso y protección de menores de Helados Colombina."
+>
+  <header class="relative bg-gradient-to-br from-brand-blue to-brand-blue-dark text-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 pt-5 sm:px-8">
+      <a href={asset('')} class="btn btn-ghost btn-sm rounded-full text-white hover:bg-white/15">
+        <Icon name="lucide:arrow-left" class="size-4" />
+        Volver al inicio
+      </a>
+      <Logo />
+    </div>
+    <div class="mx-auto max-w-5xl px-4 pt-10 pb-6 sm:px-8">
+      <p class="font-script text-2xl">Helados Colombina</p>
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-5xl">Información legal</h1>
+      <p class="mt-3 max-w-xl text-white/85">
+        Conoce cómo cuidamos tu información y la de los niños, niñas y adolescentes que participan en nuestras actividades.
+      </p>
+    </div>
+    <Wave fill="#fbf8f3" class="-mb-px" />
+  </header>
+
+  <main class="bg-brand-cream pb-20">
+    <div class="mx-auto grid max-w-5xl gap-8 px-4 sm:px-8 lg:grid-cols-[220px_1fr]">
+      <nav aria-label="Secciones legales" class="lg:sticky lg:top-6 lg:self-start">
+        <ul class="flex flex-wrap gap-2 lg:flex-col">
+          {
+            legalSections.map((section) => (
+              <li>
+                <a
+                  href={`#${section.id}`}
+                  class="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold shadow-sm ring-1 ring-brand-blue/10 transition-colors hover:bg-brand-blue hover:text-white"
+                >
+                  <Icon name={section.icon} class="size-4" />
+                  {section.shortTitle}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="grid gap-6">
+        {
+          legalSections.map((section) => (
+            <article id={section.id} class="scroll-mt-6 rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-brand-blue/5 md:p-8">
+              <h2 class="flex items-center gap-3 text-xl font-extrabold md:text-2xl">
+                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-brand-red text-white">
+                  <Icon name={section.icon} class="size-5" />
+                </span>
+                {section.title}
+              </h2>
+              {section.blocks.map((block) => (
+                <div class="mt-4">
+                  {block.subtitle && <h3 class="mb-2 text-lg font-bold">{block.subtitle}</h3>}
+                  <div class="grid gap-3 leading-relaxed text-brand-blue/80">
+                    {block.paragraphs.map((paragraph) => (
+                      <p>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

@@ -3,6 +3,8 @@ import { Icon } from 'astro-icon/components';
 import Logo from '../ui/Logo.astro';
 import Wave from '../ui/Wave.astro';
 import { socials } from '../../data/content';
+import { copyright, legalSections } from '../../data/legal';
+import { asset } from '../../lib/asset';
 
 const year = new Date().getFullYear();
 ---
@@ -58,11 +60,29 @@ const year = new Date().getFullYear();
           />
           <button type="submit" class="btn btn-secondary join-item">Enviar</button>
         </div>
-        <p class="mt-2 min-h-5 text-xs text-white/80" role="status" aria-live="polite" data-newsletter-status></p>
+        <p class="mt-2 text-[11px] text-white/70">
+          Al suscribirte autorizas el envío de novedades según nuestra
+          <a href={asset('legal#datos-personales')} class="underline hover:text-white">política de tratamiento de datos</a>.
+        </p>
+        <p class="mt-1 min-h-5 text-xs text-white/80" role="status" aria-live="polite" data-newsletter-status></p>
       </form>
     </div>
 
-    <p class="relative pb-6 text-center text-xs text-white/60">© {year} Colombina. Todos los derechos reservados.</p>
+    <nav aria-label="Información legal" class="relative mx-auto max-w-7xl border-t border-white/15 px-4 pt-6 sm:px-8">
+      <ul class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-medium">
+        {
+          legalSections.map((section) => (
+            <li>
+              <a href={asset(`legal#${section.id}`)} class="text-white/80 underline-offset-4 hover:text-white hover:underline">
+                {section.shortTitle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="relative py-6 text-center text-xs text-white/60">© {year} {copyright}</p>
   </div>
 </footer>
 
