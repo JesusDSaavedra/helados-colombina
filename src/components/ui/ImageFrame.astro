@@ -10,9 +10,18 @@ interface Props {
   /** Visual hint shown inside the placeholder until the real image exists. */
   placeholderLabel?: string;
   tone?: 'light' | 'dark';
+  /** `contain` keeps cut-out product shots whole instead of cropping them. */
+  fit?: 'cover' | 'contain';
 }
 
-const { image, class: className = '', loading = 'lazy', placeholderLabel, tone = 'light' } = Astro.props;
+const {
+  image,
+  class: className = '',
+  loading = 'lazy',
+  placeholderLabel,
+  tone = 'light',
+  fit = 'cover',
+} = Astro.props;
 ---
 
 {
@@ -24,7 +33,7 @@ const { image, class: className = '', loading = 'lazy', placeholderLabel, tone =
       height={image.height}
       loading={loading}
       decoding="async"
-      class:list={['h-full w-full object-cover', className]}
+      class:list={['h-full w-full', fit === 'contain' ? 'object-contain' : 'object-cover', className]}
     />
   ) : (
     <div

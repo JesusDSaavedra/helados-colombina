@@ -21,10 +21,11 @@ import { flavors, products } from '../../data/content';
         flavors.map((flavor, index) => (
           <li data-reveal style={`--reveal-delay: ${index * 90}ms`}>
             <article class="group card h-full bg-white text-center shadow-sm ring-1 ring-brand-blue/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-brand-blue/10">
-              <figure class="aspect-square overflow-hidden rounded-t-box">
+              <figure class="aspect-square overflow-hidden rounded-t-box bg-white">
                 <ImageFrame
                   image={flavor.image}
-                  class="transition-transform duration-500 group-hover:scale-110"
+                  fit="contain"
+                  class="p-6 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3"
                   placeholderLabel={`Sabor: ${flavor.name} (prompt #2)`}
                 />
               </figure>
@@ -41,6 +42,8 @@ import { flavors, products } from '../../data/content';
     <div class="mt-12 text-center" data-reveal>
       <a
         href={products.cta.href}
+        target="_blank"
+        rel="noopener noreferrer"
         class="btn btn-outline btn-primary rounded-full border-2 px-8 transition-transform hover:scale-105"
       >
         {products.cta.label}

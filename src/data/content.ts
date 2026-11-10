@@ -35,10 +35,10 @@ export const hero = {
   description: 'Con Helados Colombina, cada momento sabe mejor.',
   cta: { label: 'Descubre más', href: '#helados' },
   image: {
-    src: null,
+    src: 'images/hero.webp',
     alt: 'Joven disfrutando un cono de helado bajo un cielo azul',
-    width: 1200,
-    height: 1400,
+    width: 1122,
+    height: 1402,
   } satisfies ImageSlot,
 };
 
@@ -51,30 +51,33 @@ export interface Flavor {
 export const flavors: Flavor[] = [
   {
     name: 'Chocolate',
-    description: 'Intenso, cremoso y con trocitos de chocolate.',
-    image: { src: null, alt: 'Bola de helado de chocolate', width: 800, height: 800 },
+    description: 'Intenso y cremoso, para los amantes del cacao.',
+    image: { src: 'images/flavor-chocolate.webp', alt: 'Bola de helado de chocolate', width: 800, height: 800 },
   },
   {
-    name: 'Galleta & Crema',
-    description: 'Base de vainilla con galleta de chocolate.',
-    image: { src: null, alt: 'Bola de helado de galleta con crema', width: 800, height: 800 },
+    name: 'Cookies & Cream',
+    description: 'Base de vainilla con trozos de galleta de chocolate.',
+    image: { src: 'images/flavor-cookies.webp', alt: 'Bola de helado Cookies & Cream', width: 800, height: 800 },
   },
   {
     name: 'Fresa',
-    description: 'Fresco, frutal y con fresas de verdad.',
-    image: { src: null, alt: 'Bola de helado de fresa', width: 800, height: 800 },
+    description: 'Fresco, frutal y lleno de color.',
+    image: { src: 'images/flavor-strawberry.webp', alt: 'Bola de helado de fresa', width: 800, height: 800 },
   },
   {
     name: 'Vainilla',
     description: 'El clásico suave que nunca falla.',
-    image: { src: null, alt: 'Bola de helado de vainilla', width: 800, height: 800 },
+    image: { src: 'images/flavor-vanilla.webp', alt: 'Bola de helado de vainilla', width: 800, height: 800 },
   },
 ];
 
 export const products = {
   title: 'Nuestros Helados',
   subtitle: 'Variedad, sabor y mucha felicidad.',
-  cta: { label: 'Conoce toda nuestra línea', href: '#helados' },
+  cta: {
+    label: 'Conoce toda nuestra línea',
+    href: 'https://colombina.com/co-es/product/category/linea-heladeria',
+  },
 };
 
 export const moments = {
@@ -83,16 +86,17 @@ export const moments = {
   description: 'Comparte, disfruta y vive la experiencia Colombina.',
   cta: { label: 'Únete a la familia', href: '#contacto' },
   image: {
-    src: null,
+    src: 'images/friends.webp',
     alt: 'Tres amigos riendo mientras comparten helados',
-    width: 1400,
-    height: 1000,
+    width: 1484,
+    height: 1060,
   } satisfies ImageSlot,
 };
 
 export const socials = [
-  { label: 'Instagram', icon: 'simple-icons:instagram', href: 'https://www.instagram.com/colombina/' },
-  { label: 'TikTok', icon: 'simple-icons:tiktok', href: 'https://www.tiktok.com/@colombina' },
-  { label: 'Facebook', icon: 'simple-icons:facebook', href: 'https://www.facebook.com/Colombina' },
-  { label: 'YouTube', icon: 'simple-icons:youtube', href: 'https://www.youtube.com/@colombina' },
+  // Official profiles listed on colombina.com (no TikTok profile is linked there).
+  { label: 'Instagram', icon: 'simple-icons:instagram', href: 'https://www.instagram.com/colombinaoficial/' },
+  { label: 'Facebook', icon: 'simple-icons:facebook', href: 'https://www.facebook.com/ColombinaOficial/' },
+  { label: 'YouTube', icon: 'simple-icons:youtube', href: 'https://www.youtube.com/channel/UC1gY2nCVfJJe3_oFrge8NpQ' },
+  { label: 'LinkedIn', icon: 'simple-icons:linkedin', href: 'https://www.linkedin.com/company/colombina-s-a/' },
 ];
