@@ -45,8 +45,12 @@ pnpm build
 pnpm preview
 ```
 
-## Deploy (GitHub Pages)
+## Deploy (Vercel)
 
-1. Push this repo to GitHub.
-2. In the repo: **Settings → Pages → Source: GitHub Actions**.
-3. Every push to `main` runs `.github/workflows/deploy.yml`, which sets `SITE_URL` and `BASE_PATH` automatically from the repo owner and name.
+Production: https://helados-colombina.vercel.app
+
+```sh
+pnpm dlx vercel@latest deploy --prod
+```
+
+Once the Vercel project is connected to this GitHub repo, every push to `main` deploys automatically.

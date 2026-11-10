@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 # raw downloaded images (processed into public/images)
 imagenes-entrantes/
+.vercel
+.env*
