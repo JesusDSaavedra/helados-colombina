@@ -21,11 +21,12 @@ export const navLinks = [
 ];
 
 export const brandLogo: ImageSlot = {
-  // Official logo must come from Colombina. Never generate it with AI.
-  src: null,
+  // Official logo (version for dark backgrounds), taken from colombina.com.
+  // Never generate it with AI.
+  src: 'images/brand/colombina-logo.svg',
   alt: 'Colombina',
-  width: 240,
-  height: 80,
+  width: 345,
+  height: 176,
 };
 
 export const hero = {
