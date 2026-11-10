@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { ImageSlot } from '../../data/content';
+import { asset } from '../../lib/asset';
+
+interface Props {
+  image: ImageSlot;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  /** Visual hint shown inside the placeholder until the real image exists. */
+  placeholderLabel?: string;
+  tone?: 'light' | 'dark';
+}
+
+const { image, class: className = '', loading = 'lazy', placeholderLabel, tone = 'light' } = Astro.props;
+---
+
+{
+  image.src ? (
+    <img
+      src={asset(image.src)}
+      alt={image.alt}
+      width={image.width}
+      height={image.height}
+      loading={loading}
+      decoding="async"
+      class:list={['h-full w-full object-cover', className]}
+    />
+  ) : (
+    <div
+      role="img"
+      aria-label={image.alt}
+      class:list={[
+        'flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center',
+        tone === 'dark'
+          ? 'bg-gradient-to-br from-brand-blue-light/40 to-brand-blue-dark/40 text-white/80'
+          : 'bg-gradient-to-br from-brand-cream to-base-300 text-brand-blue/60',
+        className,
+      ]}
+    >
+      <Icon name="lucide:image" class="size-8" aria-hidden="true" />
+      <span class="text-xs font-semibold tracking-wide uppercase">{placeholderLabel ?? image.alt}</span>
+    </div>
+  )
+}

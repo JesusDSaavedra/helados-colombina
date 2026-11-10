@@ -1,0 +1,25 @@
+{
+  "name": "helados-colombina",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/montserrat": "^5.3.0",
+    "@fontsource/pacifico": "^5.3.0",
+    "@iconify-json/lucide": "^1.2.152",
+    "@iconify-json/simple-icons": "^1.2.101",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.8",
+    "astro-icon": "^1.2.0",
+    "daisyui": "^5.7.50",
+    "tailwindcss": "^4.3.5"
+  }
+}

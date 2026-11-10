@@ -1,0 +1,43 @@
+---
+import { Icon } from 'astro-icon/components';
+import ImageFrame from '../ui/ImageFrame.astro';
+import Sparkle from '../ui/Sparkle.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { moments } from '../../data/content';
+---
+
+<section id="experiencias" class="relative overflow-hidden bg-brand-cream pb-24 md:pb-32">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-8 md:grid-cols-[1.2fr_1fr]">
+    <div class="relative" data-reveal>
+      <div
+        class="aspect-[7/5] overflow-hidden rounded-[2rem_6rem_2rem_6rem] shadow-2xl shadow-brand-blue/20 ring-8 ring-white"
+      >
+        <ImageFrame image={moments.image} placeholderLabel="Imagen grupo de amigos (prompt #3)" />
+      </div>
+      <div
+        class="absolute -bottom-6 -left-6 -z-0 size-28 rounded-[40%_60%_55%_45%/55%_40%_60%_45%] bg-brand-red/90"
+        aria-hidden="true"
+      >
+      </div>
+    </div>
+
+    <div class="relative" data-reveal style="--reveal-delay: 120ms">
+      <Sparkle class="absolute -top-8 right-4 text-brand-red" flip />
+      <h2 class="text-4xl leading-[1.05] font-extrabold tracking-tight md:text-5xl">
+        {moments.titleLines.map((line) => <span class="block">{line}</span>)}
+        <span class="relative mt-1 inline-block font-script text-4xl font-normal md:text-5xl">
+          {moments.titleScript}
+          <Swoosh class="absolute -bottom-4 left-0 h-4 w-full" />
+        </span>
+      </h2>
+      <p class="mt-8 max-w-sm text-lg text-brand-blue/80">{moments.description}</p>
+      <a
+        href={moments.cta.href}
+        class="btn btn-secondary mt-8 rounded-full px-8 shadow-lg shadow-brand-red/25 transition-transform hover:scale-105"
+      >
+        {moments.cta.label}
+        <Icon name="lucide:chevron-right" class="size-5" />
+      </a>
+    </div>
+  </div>
+</section>

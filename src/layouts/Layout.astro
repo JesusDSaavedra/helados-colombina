@@ -1,0 +1,62 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import { asset } from '../lib/asset';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Helados Colombina | Disfruta lo bueno de la vida',
+  description = 'Descubre los Helados Colombina: variedad, sabor y mucha felicidad en cada momento.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-theme="colombina">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#243587" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      // Reveal elements marked with [data-reveal] when they enter the viewport.
+      function setupReveal() {
+        const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+        if (!('IntersectionObserver' in window)) {
+          items.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+        );
+        items.forEach((el) => observer.observe(el));
+      }
+
+      document.addEventListener('astro:page-load', setupReveal);
+    </script>
+  </body>
+</html>

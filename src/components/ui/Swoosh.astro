@@ -1,0 +1,17 @@
+---
+/** Hand-drawn red underline used below script headlines. */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  class:list={['text-brand-red', className]}
+  viewBox="0 0 300 24"
+  fill="none"
+  aria-hidden="true"
+  preserveAspectRatio="none"
+>
+  <path d="M4 16C70 6 170 2 296 10" stroke="currentColor" stroke-width="7" stroke-linecap="round"></path>
+</svg>

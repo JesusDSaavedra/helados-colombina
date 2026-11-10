@@ -1,0 +1,21 @@
+---
+/** Three short strokes that suggest freshness / excitement next to titles. */
+interface Props {
+  class?: string;
+  flip?: boolean;
+}
+const { class: className = '', flip = false } = Astro.props;
+---
+
+<svg
+  class:list={['size-10', flip && '-scale-x-100', className]}
+  viewBox="0 0 40 40"
+  fill="none"
+  aria-hidden="true"
+>
+  <g stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <path d="M8 20 4 10"></path>
+    <path d="M18 16 18 4"></path>
+    <path d="M27 20 34 11"></path>
+  </g>
+</svg>

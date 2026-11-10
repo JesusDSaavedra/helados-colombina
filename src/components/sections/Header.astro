@@ -1,0 +1,51 @@
+---
+import { Icon } from 'astro-icon/components';
+import Logo from '../ui/Logo.astro';
+import { navLinks } from '../../data/content';
+---
+
+<header class="absolute inset-x-0 top-0 z-30">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 pt-5 sm:px-8">
+    <nav aria-label="Principal" class="hidden md:block">
+      <ul class="flex items-center gap-1 rounded-full bg-white/10 p-1 backdrop-blur-md">
+        {
+          navLinks.map((link, index) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={index === 0 ? 'page' : undefined}
+                class:list={[
+                  'relative block rounded-full px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/15',
+                  index === 0 &&
+                    "after:absolute after:inset-x-4 after:bottom-1 after:h-0.5 after:rounded-full after:bg-brand-red after:content-['']",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Mobile menu: native <details> keeps it accessible without extra JS -->
+    <details class="dropdown md:hidden">
+      <summary class="btn btn-circle btn-ghost border-white/30 text-white" aria-label="Abrir menú">
+        <Icon name="lucide:menu" class="size-6" />
+      </summary>
+      <ul class="menu dropdown-content z-40 mt-3 w-56 rounded-box bg-white p-2 text-brand-blue shadow-xl">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="font-semibold">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
+
+    <Logo />
+  </div>
+</header>

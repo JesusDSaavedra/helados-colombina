@@ -1,0 +1,63 @@
+---
+import { Icon } from 'astro-icon/components';
+import ImageFrame from '../ui/ImageFrame.astro';
+import Sparkle from '../ui/Sparkle.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import Wave from '../ui/Wave.astro';
+import { hero } from '../../data/content';
+---
+
+<section
+  id="inicio"
+  class="relative isolate overflow-hidden bg-gradient-to-br from-brand-blue via-brand-blue to-brand-blue-dark pt-28 text-white md:pt-32"
+>
+  <!-- Organic background blobs -->
+  <div
+    class="absolute -right-24 top-24 -z-10 h-80 w-72 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-brand-red md:h-[28rem] md:w-96"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="absolute -left-32 bottom-10 -z-10 size-80 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] bg-brand-blue-light/50 blur-sm"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-8 md:grid-cols-2">
+    <div class="relative z-10 pb-10 md:pb-24">
+      <h1 class="text-5xl leading-[0.95] font-extrabold tracking-tight lg:text-[56px] xl:text-7xl" data-reveal>
+        {hero.titleLines.map((line) => <span class="block">{line}</span>)}
+        <span class="relative mt-2 inline-block font-script text-5xl font-normal lg:text-6xl xl:text-7xl">
+          {hero.titleScript}
+          <Swoosh class="absolute -bottom-4 left-0 h-4 w-full" />
+        </span>
+      </h1>
+
+      <p class="mt-8 max-w-xs text-lg text-white/90" data-reveal style="--reveal-delay: 120ms">
+        {hero.description}
+      </p>
+
+      <a
+        href={hero.cta.href}
+        class="btn btn-secondary btn-lg mt-8 rounded-full px-8 shadow-lg shadow-brand-red/30 transition-transform hover:scale-105"
+        data-reveal
+        style="--reveal-delay: 220ms"
+      >
+        {hero.cta.label}
+        <Icon name="lucide:chevron-right" class="size-5" />
+      </a>
+    </div>
+
+    <div class="relative" data-reveal style="--reveal-delay: 150ms">
+      <Sparkle class="absolute -top-2 left-4 z-10 animate-float text-white" />
+      <Sparkle class="absolute top-10 right-6 z-10 animate-float text-white [animation-delay:1.5s]" flip />
+      <div
+        class="mx-auto aspect-[6/7] w-full max-w-md overflow-hidden rounded-t-[45%] rounded-b-[2rem] md:max-w-none"
+      >
+        <ImageFrame image={hero.image} loading="eager" tone="dark" placeholderLabel="Imagen hero (prompt #1)" />
+      </div>
+    </div>
+  </div>
+
+  <Wave class="relative z-20 -mt-10 md:-mt-16" fill="#fbf8f3" />
+</section>

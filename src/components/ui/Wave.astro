@@ -1,0 +1,22 @@
+---
+/** Organic wave used as a soft transition between sections. */
+interface Props {
+  class?: string;
+  /** Fill color of the wave (the color of the section it leads into). */
+  fill?: string;
+  flip?: boolean;
+}
+const { class: className = '', fill = '#ffffff', flip = false } = Astro.props;
+---
+
+<svg
+  class:list={['block h-auto w-full', flip && 'rotate-180', className]}
+  viewBox="0 0 1440 120"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+>
+  <path
+    fill={fill}
+    d="M0 64C160 112 320 120 520 88C720 56 860 8 1060 16C1220 22 1340 56 1440 80V120H0Z"
+  ></path>
+</svg>
