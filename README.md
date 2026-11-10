@@ -34,7 +34,7 @@ public/images/           # Generated / official images go here
 
 ## Images
 
-Images start as branded placeholders. See [IMAGE_PROMPTS.md](IMAGE_PROMPTS.md) for the generation prompts and how to plug each file in.
+Images start as branded placeholders. See [IMAGE_PROMPTS.md](IMAGE_PROMPTS.md) (Spanish step-by-step guide, English prompts). Raw downloads go in `imagenes-entrantes/` (git-ignored) and are processed into `public/images/`.
 
 ## Commands
 
